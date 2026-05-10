@@ -35,7 +35,9 @@ struct Provider: TimelineProvider {
         ("When a measure becomes a target, it ceases to be a good measures", "Goodhart’s law"),
         ("Why do we close our eyes when we pray, kiss, or dream? Because the most beautiful things in life are not seen but felt by heart.", "Denzel Washington"),
         ("What we do every day matters more than what we do once in a while", "Lewis Howes"),
-        ("It is amazing what you can accomplish if you do not care who gets the credit", "Harry S. Truman")
+        ("It is amazing what you can accomplish if you do not care who gets the credit", "Harry S. Truman"),
+        ("Maybe life has no equal trade, maybe you can give up all you got, and get nothing back. Even if I can't prove it's true, I have to try", "Edward Elric"),
+        ("'It hasn't even been 1/100th of my life.' 'It's interesting, isn't it? That this 1/100th changed you.'", "Frieren and Eisen")
     ]
 
     func placeholder(in context: Context) -> QuoteEntry {
