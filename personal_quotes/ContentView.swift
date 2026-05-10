@@ -1,5 +1,6 @@
 import SwiftUI
 import WidgetKit
+import AppKit
 
 // The structure for our saved data (changed 'let' to 'var' to allow editing)
 struct QuoteItem: Codable, Hashable {
@@ -9,13 +10,14 @@ struct QuoteItem: Codable, Hashable {
 
 struct ContentView: View {
     @State private var quotes: [QuoteItem] = []
+    @State private var itemBeingEdited: QuoteItem? = nil
+    @State private var isCopied: Bool = false // Add this line
     
     // Inputs for adding/editing
     @State private var inputText: String = ""
     @State private var inputAuthor: String = ""
     
-    // Tracks which quote we are currently editing (if any)
-    @State private var itemBeingEdited: QuoteItem? = nil
+  
     
     let defaultQuotes: [QuoteItem] = [
         QuoteItem(quote: "Find a friend who is so different from you, and you can’t believe how much you have in common.", author: "Nye"),
@@ -31,7 +33,27 @@ struct ContentView: View {
                 Color(red: 0.08, green: 0.08, blue: 0.08).edgesIgnoringSafeArea(.all)
                 
                 VStack(spacing: 20) {
-                    Text("Quotes Bank")
+                    HStack {
+                                        Text("My Quote Bank")
+                                            .font(.system(size: 28, weight: .bold, design: .default))
+                                            .foregroundColor(.white)
+                                        
+                                        Spacer()
+                                        
+                                        // The new interactive Copy button
+                                        Button(action: { copyToClipboard() }) {
+                
+                                            Text(isCopied ? "Copied!" : "Export/Copy")
+                                        }
+                                        .buttonStyle(.plain)
+                                        .foregroundColor(isCopied ? .green : Color(white: 0.7))
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 6)
+                                        .background(Color(white: 0.15))
+                                        .cornerRadius(8)
+                                    }
+            
+                                    .padding(.top, 10)
                         .font(.system(size: 28, weight: .bold, design: .default))
                         .foregroundColor(.white)
                         .padding(.top, 10)
@@ -193,4 +215,47 @@ struct ContentView: View {
             WidgetCenter.shared.reloadAllTimelines()
         }
     }
+    // Prints your saved quotes as JavaScript arrays to the Xcode console
+    func printJSArrays() {
+            // Escapes any internal quotation marks so it doesn't break the JS arrays
+            let quoteStrings = quotes.map { "\"\($0.quote.replacingOccurrences(of: "\"", with: "\\\""))\"" }.joined(separator: ",\n    ")
+            let authorStrings = quotes.map { "\"\($0.author.replacingOccurrences(of: "\"", with: "\\\""))\"" }.joined(separator: ",\n    ")
+            
+            print("\n--- COPY BELOW THIS LINE ---")
+            print("const quotes = [\n    \(quoteStrings)\n];")
+            print("const attribution = [\n    \(authorStrings)\n];")
+            print("----------------------------\n")
+    }
+    // Copies your saved quotes to the Mac clipboard
+        func copyToClipboard() {
+            let quoteStrings = quotes.map { "\"\($0.quote.replacingOccurrences(of: "\"", with: "\\\""))\"" }.joined(separator: ",\n    ")
+            let authorStrings = quotes.map { "\"\($0.author.replacingOccurrences(of: "\"", with: "\\\""))\"" }.joined(separator: ",\n    ")
+            
+            let exportText = """
+            const quotes = [
+                \(quoteStrings)
+            ];
+
+            const attribution = [
+                \(authorStrings)
+            ];
+            """
+            
+            // 1. Send the text to the clipboard
+            let pasteboard = NSPasteboard.general
+            pasteboard.clearContents()
+            pasteboard.setString(exportText, forType: .string)
+            
+            // 2. Trigger the visual "Copied!" feedback
+            withAnimation {
+                isCopied = true
+            }
+            
+            // 3. Reset the button after 2 seconds
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                withAnimation {
+                    isCopied = false
+                }
+            }
+        }
 }
