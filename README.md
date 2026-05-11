@@ -1,10 +1,10 @@
 # simple-personal-quotes
 
-# add your own personal quotes widget with custom quotes in a simple app.
+## add your own personal quotes widget with custom quotes in a simple app.
 
 ## what you need
 * **a macbook**
-* **xcode downloaded**
+* **xcode**
 
 ## install and run
 1. Clone this repository in Xcode
