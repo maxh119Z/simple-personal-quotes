@@ -1,6 +1,6 @@
 # simple-personal-quotes
 
-## add your own personal quotes widget with custom quotes in a simple app.
+## add your own widget if you would like.
 <img width="359" height="175" alt="image" src="https://github.com/user-attachments/assets/9297ee45-e033-4945-9900-fdd7cd6f5267" />
 
 ## what you need
